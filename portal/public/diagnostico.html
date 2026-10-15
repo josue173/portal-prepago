@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Prepago UMG · Tu conexión</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<!--
+  data-v4 / data-v6: nombres con solo registro A (v4.prepago.lan) o solo AAAA (v6.prepago.lan),
+  definidos como host overrides en el DNS Resolver de pfSense. Así se comprueba cada pila por separado.
+-->
+<body data-v4="http://v4.prepago.lan/api/diagnostico" data-v6="http://v6.prepago.lan:8081/api/diagnostico">
+  <header class="red">
+    <div class="red__interior">
+      <span class="red__nombre">Prepago-UMG</span>
+      <span class="red__lugar">Tu conexión</span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <h1>Tu conexión</h1>
+    <p class="ayuda">Comprobamos si tu dispositivo navega por IPv4, por IPv6 o por ambos.</p>
+
+    <div class="familias">
+      <section class="familia" aria-live="polite">
+        <div class="familia__titulo">Esta página llegó por <span id="actual-familia" class="etiqueta etiqueta--no">…</span></div>
+        <p class="familia__ip" id="actual-ip">Consultando…</p>
+        <p class="familia__meta" id="actual-meta"></p>
+      </section>
+      <section class="familia" aria-live="polite">
+        <div class="familia__titulo">IPv4 <span id="v4-estado" class="etiqueta etiqueta--no">Comprobando</span></div>
+        <p class="familia__ip" id="v4-ip"></p>
+      </section>
+      <section class="familia" aria-live="polite">
+        <div class="familia__titulo">IPv6 <span id="v6-estado" class="etiqueta etiqueta--no">Comprobando</span></div>
+        <p class="familia__ip" id="v6-ip"></p>
+      </section>
+    </div>
+
+    <div class="acciones">
+      <a class="boton" href="./">Volver al portal</a>
+    </div>
+  </main>
+  <script src="js/diagnostico.js"></script>
+</body>
+</html>

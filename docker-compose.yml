@@ -1,0 +1,45 @@
+# Desarrollo local: API + dos réplicas del portal.
+#   docker compose up --build
+#   Réplica A: http://localhost:8081   Réplica B: http://localhost:8082
+# En srv-web se combina con docker-compose.srv-web.yml (ver README).
+services:
+  api:
+    build: ./api
+    environment:
+      PORT: "5000"
+      TIMEOUT_MS: "${TIMEOUT_MS:-15000}"
+      ADMIN_TOKEN: "${ADMIN_TOKEN:-}"
+      CORS_ORIGIN: "*"
+    volumes:
+      - ./api/vouchers:/app/vouchers:ro  # CSV exportados de pfSense
+      - api-data:/app/data               # vouchers vendidos (persistente)
+    restart: unless-stopped
+
+  portal-a:
+    build: ./portal
+    environment:
+      PORT: "8081"
+      REPLICA: "portal-a"
+      API_UPSTREAM: "api:5000"
+    ports:
+      - "8081:8081"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  portal-b:
+    build: ./portal
+    environment:
+      PORT: "8082"
+      REPLICA: "portal-b"
+      API_UPSTREAM: "api:5000"
+    ports:
+      - "8082:8082"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  api-data:

@@ -1,0 +1,23 @@
+# Ajustes para la VM srv-web (10.10.30.11 / 2001:db8:acad:30::11).
+#   docker compose -f docker-compose.yml -f docker-compose.srv-web.yml up -d --build
+#
+# Con red "host" cada réplica escucha directamente en IPv4 e IPv6 de la VM y ve la
+# IP real del cliente (necesario para la página de aviso IPv6 y el diagnóstico).
+# La API solo escucha en localhost: los clientes la alcanzan a través de las réplicas.
+services:
+  api:
+    network_mode: host
+    environment:
+      HOST: "127.0.0.1"
+
+  portal-a:
+    network_mode: host
+    ports: !reset []
+    environment:
+      API_UPSTREAM: "127.0.0.1:5000"
+
+  portal-b:
+    network_mode: host
+    ports: !reset []
+    environment:
+      API_UPSTREAM: "127.0.0.1:5000"

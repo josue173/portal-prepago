@@ -1,0 +1,335 @@
+/* Portal cautivo prepago. Sin fuentes ni recursos externos: un cliente sin
+   autenticar no tiene Internet, así que todo se sirve desde la red local. */
+
+:root {
+  --anil: #22307a;
+  --anil-claro: #e4e8f6;
+  --tinta: #141a3d;
+  --tinta-suave: #4a5070;
+  --fondo: #f3f5f9;
+  --papel: #ffffff;
+  --linea: #d3d8e6;
+  --marigold: #f2b632;
+  --marigold-claro: #fdf1d3;
+  --verde: #17865b;
+  --verde-claro: #e2f3eb;
+  --rojo: #b83a2e;
+  --rojo-claro: #fbe9e7;
+  --radio: 10px;
+  --texto: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --codigo: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--texto);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--tinta);
+  background: var(--fondo);
+}
+
+.contenedor {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+/* Encabezado: nombre de la red */
+.red {
+  background: var(--anil);
+  color: #fff;
+  padding: 0.875rem 1rem;
+}
+.red__interior {
+  max-width: 30rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.red__senal { flex: none; }
+.red__nombre { font-weight: 650; font-size: 1.0625rem; letter-spacing: 0.01em; }
+.red__lugar { font-size: 0.8125rem; opacity: 0.8; margin-left: auto; }
+
+h1 {
+  font-size: 1.625rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 1.5rem 0 0.25rem;
+}
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.25;
+  margin: 0 0 0.25rem;
+}
+.ayuda { color: var(--tinta-suave); margin: 0 0 1.25rem; font-size: 0.9375rem; }
+
+/* Progreso: la compra sí es una secuencia */
+.pasos {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.375rem;
+  counter-reset: paso;
+}
+.pasos li {
+  counter-increment: paso;
+  font-size: 0.8125rem;
+  color: var(--tinta-suave);
+  padding-top: 0.5rem;
+  border-top: 4px solid var(--linea);
+}
+.pasos li::before { content: counter(paso) ". "; }
+.pasos li[aria-current="step"] { color: var(--tinta); font-weight: 650; border-top-color: var(--anil); }
+.pasos li.hecho { border-top-color: var(--anil); }
+
+.paso[hidden] { display: none; }
+
+/* Formularios */
+.campo { margin-bottom: 1rem; }
+.campo label { display: block; font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.3125rem; }
+.campo .opcional { font-weight: 400; color: var(--tinta-suave); }
+.campo input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.0625rem; /* 16px o más evita el zoom automático en iOS */
+  padding: 0.75rem 0.8125rem;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+}
+.campo input:focus { outline: none; border-color: var(--anil); box-shadow: 0 0 0 3px var(--anil-claro); }
+.campo input[aria-invalid="true"] { border-color: var(--rojo); }
+.campo .error-campo { color: var(--rojo); font-size: 0.875rem; margin: 0.3125rem 0 0; }
+.campo .error-campo:empty { display: none; }
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+.casilla { display: flex; gap: 0.625rem; align-items: flex-start; margin: 0.25rem 0 0.5rem; }
+.casilla input { width: 1.375rem; height: 1.375rem; margin: 0.0625rem 0 0; accent-color: var(--anil); flex: none; }
+.casilla label { font-weight: 400; margin: 0; }
+
+details.condiciones { font-size: 0.875rem; color: var(--tinta-suave); margin: 0 0 1rem 2rem; }
+details.condiciones summary { cursor: pointer; color: var(--anil); }
+details.condiciones ul { margin: 0.5rem 0 0; padding-left: 1.125rem; }
+
+details.ya-tengo { margin-top: 1.75rem; border-top: 1px solid var(--linea); padding-top: 1rem; }
+details.ya-tengo summary { cursor: pointer; color: var(--anil); font-weight: 600; }
+details.ya-tengo form { margin-top: 0.875rem; }
+details.ya-tengo .boton { width: 100%; }
+
+/* Botones */
+.acciones { display: flex; gap: 0.75rem; margin-top: 1.5rem; align-items: center; }
+.boton {
+  font: inherit;
+  font-weight: 650;
+  font-size: 1.0625rem;
+  border: 0;
+  border-radius: var(--radio);
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  background: var(--anil);
+  color: #fff;
+  flex: 1;
+  min-height: 3.125rem;
+}
+a.boton { display: block; text-align: center; text-decoration: none; }
+.boton:disabled { opacity: 0.55; cursor: progress; }
+.boton--secundario { background: transparent; color: var(--anil); flex: none; padding-inline: 0.5rem; }
+.boton:focus-visible, a:focus-visible, summary:focus-visible, .ficha input:focus-visible + .ficha__cuerpo {
+  outline: 3px solid var(--marigold);
+  outline-offset: 2px;
+}
+
+/* Fichas de recarga: el elemento distintivo del portal */
+.fichas { display: grid; gap: 0.75rem; border: 0; padding: 0; margin: 0; }
+.fichas legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ficha { position: relative; display: block; cursor: pointer; }
+.ficha input { position: absolute; opacity: 0; pointer-events: none; }
+.ficha__cuerpo {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  min-height: 5.25rem;
+  border-radius: var(--radio);
+  background: var(--papel);
+  border: 1.5px solid var(--linea);
+  overflow: hidden;
+}
+.ficha__talon {
+  position: relative;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: var(--anil-claro);
+  color: var(--anil);
+  border-right: 2px dashed var(--linea);
+}
+/* muescas de la perforación */
+.ficha__talon::before, .ficha__talon::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fondo);
+  border: 1.5px solid var(--linea);
+}
+.ficha__talon::before { top: -9px; }
+.ficha__talon::after { bottom: -9px; }
+.ficha__precio { font-size: 1.75rem; font-weight: 750; line-height: 1; letter-spacing: -0.02em; }
+.ficha__moneda { font-size: 0.8125rem; font-weight: 600; }
+.ficha__datos { padding: 0.75rem 0.875rem 0.75rem 1.125rem; align-self: center; }
+.ficha__datos > span { display: block; }
+.ficha__nombre { font-weight: 700; font-size: 1.0625rem; }
+.ficha__detalle { color: var(--tinta-suave); font-size: 0.9375rem; }
+.ficha__estado { font-size: 0.8125rem; color: var(--rojo); font-weight: 600; }
+
+.ficha input:checked + .ficha__cuerpo { border-color: var(--tinta); box-shadow: 0 0 0 1px var(--tinta); }
+.ficha input:checked + .ficha__cuerpo .ficha__talon { background: var(--marigold); color: var(--tinta); }
+.ficha input:disabled + .ficha__cuerpo { opacity: 0.55; cursor: not-allowed; }
+
+/* Resumen del pedido en el paso de pago */
+.resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  background: var(--marigold-claro);
+  border-radius: var(--radio);
+  padding: 0.75rem 0.875rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9375rem;
+}
+.resumen strong { font-size: 1.125rem; }
+
+/* Tarjetas de prueba (el pago es simulado) */
+.pruebas {
+  border: 1.5px dashed var(--linea);
+  border-radius: var(--radio);
+  padding: 0.75rem 0.875rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+}
+.pruebas p { margin: 0 0 0.5rem; color: var(--tinta-suave); }
+.pruebas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.375rem; }
+.pruebas button {
+  font: inherit;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  color: var(--tinta);
+  cursor: pointer;
+}
+.pruebas code { font-family: var(--codigo); font-size: 0.8125rem; }
+.pruebas span { color: var(--tinta-suave); }
+
+/* Mensajes de estado */
+.aviso {
+  border-radius: var(--radio);
+  padding: 0.75rem 0.875rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+}
+.aviso:empty { display: none; }
+.aviso--error { background: var(--rojo-claro); color: #7d231b; border-left: 4px solid var(--rojo); }
+.aviso--info { background: var(--anil-claro); color: var(--anil); border-left: 4px solid var(--anil); }
+
+.cargando::after {
+  content: "";
+  display: inline-block;
+  width: 0.875em;
+  height: 0.875em;
+  margin-left: 0.5em;
+  vertical-align: -0.1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* Paso final: la ficha raspada con el voucher */
+.voucher {
+  position: relative;
+  background: var(--papel);
+  border: 1.5px solid var(--tinta);
+  border-radius: var(--radio);
+  overflow: hidden;
+  margin: 0.5rem 0 1.25rem;
+}
+.voucher__franja {
+  background: var(--marigold);
+  padding: 0.625rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 650;
+}
+.voucher__codigo {
+  font-family: var(--codigo);
+  font-size: 1.875rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 1.25rem 1rem 0.375rem;
+  word-break: break-all;
+  animation: raspar 700ms ease-out both;
+}
+.voucher__nota { text-align: center; color: var(--tinta-suave); font-size: 0.875rem; margin: 0 1rem 1rem; }
+@keyframes raspar {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.conectado {
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  background: var(--verde-claro);
+  color: #0e5a3c;
+  border-radius: var(--radio);
+  padding: 0.875rem;
+  font-weight: 600;
+}
+.conectado::before {
+  content: "";
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--verde);
+}
+
+.pie { margin-top: 2rem; font-size: 0.8125rem; color: var(--tinta-suave); }
+.pie a { color: var(--anil); }
+
+/* Página de diagnóstico */
+.familias { display: grid; gap: 0.75rem; margin: 1rem 0; }
+.familia {
+  background: var(--papel);
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio);
+  padding: 0.875rem;
+}
+.familia__titulo { font-weight: 700; display: flex; justify-content: space-between; gap: 0.5rem; }
+.familia__ip { font-family: var(--codigo); font-size: 1.0625rem; word-break: break-all; margin: 0.25rem 0 0; }
+.familia__meta { color: var(--tinta-suave); font-size: 0.875rem; margin: 0.25rem 0 0; }
+.etiqueta { font-size: 0.8125rem; font-weight: 650; border-radius: 999px; padding: 0.0625rem 0.625rem; }
+.etiqueta--si { background: var(--verde-claro); color: #0e5a3c; }
+.etiqueta--no { background: var(--fondo); color: var(--tinta-suave); }
+
+@media (prefers-reduced-motion: reduce) {
+  .voucher__codigo { animation: none; }
+  .cargando::after { animation-duration: 2.4s; }
+}

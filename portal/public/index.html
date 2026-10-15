@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Prepago UMG · Conéctate</title>
+  <link rel="stylesheet" href="css/app.css">
+  <!-- PORTAL_CONFIG -->
+</head>
+<body>
+  <header class="red">
+    <div class="red__interior">
+      <svg class="red__senal" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 19.5a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Z" fill="#F2B632"/>
+        <path d="M8.2 13.6a5.4 5.4 0 0 1 7.6 0M5 10.4a9.9 9.9 0 0 1 14 0M1.8 7.2a14.4 14.4 0 0 1 20.4 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="red__nombre">Prepago-UMG</span>
+      <span class="red__lugar">Internet de última milla</span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <h1>Conéctate a Internet</h1>
+    <p class="ayuda">Compra tiempo de navegación y conéctate en menos de un minuto.</p>
+
+    <ol class="pasos" id="pasos">
+      <li aria-current="step">Datos</li>
+      <li>Plan</li>
+      <li>Pago</li>
+      <li>Listo</li>
+    </ol>
+
+    <!-- Paso 1: registro -->
+    <section class="paso" id="paso-1" aria-labelledby="t-paso-1">
+      <h2 id="t-paso-1">Tus datos</h2>
+      <p class="ayuda">Solo pedimos lo necesario para asociar tu compra.</p>
+      <p class="aviso aviso--error" role="alert" id="aviso-1"></p>
+      <form id="form-registro" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" autocomplete="name" required aria-describedby="e-nombre">
+          <p class="error-campo" id="e-nombre"></p>
+        </div>
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" name="telefono" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="5555 1234" required aria-describedby="e-telefono">
+          <p class="error-campo" id="e-telefono"></p>
+        </div>
+        <div class="campo">
+          <label for="email">Correo <span class="opcional">(opcional)</span></label>
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" aria-describedby="e-email">
+          <p class="error-campo" id="e-email"></p>
+        </div>
+        <div class="campo">
+          <div class="casilla">
+            <input id="acepta" name="aceptaTerminos" type="checkbox" aria-describedby="e-acepta">
+            <label for="acepta">Acepto las condiciones del servicio</label>
+          </div>
+          <details class="condiciones">
+            <summary>Ver condiciones</summary>
+            <ul>
+              <li>El tiempo comienza a contar al conectarte y no se pausa.</li>
+              <li>La velocidad indicada es la máxima por dispositivo.</li>
+              <li>Tus datos se usan solo para asociar la compra y no se comparten.</li>
+              <li>El pago es simulado: este portal es un prototipo académico.</li>
+            </ul>
+          </details>
+          <p class="error-campo" id="e-acepta"></p>
+        </div>
+        <div class="acciones">
+          <button class="boton" type="submit">Continuar</button>
+        </div>
+      </form>
+
+      <details class="ya-tengo" id="ya-tengo" hidden>
+        <summary>Ya tengo un código</summary>
+        <form id="form-codigo" novalidate>
+          <div class="campo">
+            <label for="codigo">Código de acceso</label>
+            <input id="codigo" name="codigo" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="e-codigo">
+            <p class="error-campo" id="e-codigo"></p>
+          </div>
+          <button class="boton" type="submit">Conectar con mi código</button>
+        </form>
+      </details>
+    </section>
+
+    <!-- Paso 2: plan -->
+    <section class="paso" id="paso-2" aria-labelledby="t-paso-2" hidden>
+      <h2 id="t-paso-2">Elige tu plan</h2>
+      <p class="ayuda">El precio incluye todo. No hay cargos adicionales.</p>
+      <p class="aviso aviso--error" role="alert" id="aviso-2"></p>
+      <form id="form-plan" novalidate>
+        <fieldset class="fichas" id="lista-planes">
+          <legend>Planes disponibles</legend>
+        </fieldset>
+        <div class="acciones">
+          <button class="boton boton--secundario" type="button" data-volver="1">Atrás</button>
+          <button class="boton" type="submit" id="btn-plan">Continuar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Paso 3: pago -->
+    <section class="paso" id="paso-3" aria-labelledby="t-paso-3" hidden>
+      <h2 id="t-paso-3">Pago con tarjeta</h2>
+      <div class="resumen" id="resumen"></div>
+
+      <div class="pruebas">
+        <p>Este pago es simulado. Toca una tarjeta de prueba para llenarla:</p>
+        <ul>
+          <li><button type="button" data-tarjeta="4111111111111111"><code>4111 1111 1111 1111</code><span>Aprobada</span></button></li>
+          <li><button type="button" data-tarjeta="4000000000000002"><code>4000 0000 0000 0002</code><span>Sin fondos</span></button></li>
+          <li><button type="button" data-tarjeta="4000000000000069"><code>4000 0000 0000 0069</code><span>Rechazada</span></button></li>
+          <li><button type="button" data-tarjeta="4000000000000119"><code>4000 0000 0000 0119</code><span>Banco sin respuesta</span></button></li>
+        </ul>
+      </div>
+
+      <form id="form-pago" novalidate>
+        <div class="campo">
+          <label for="titular">Nombre en la tarjeta</label>
+          <input id="titular" name="titular" autocomplete="cc-name" required aria-describedby="e-titular">
+          <p class="error-campo" id="e-titular"></p>
+        </div>
+        <div class="campo">
+          <label for="numero">Número de tarjeta</label>
+          <input id="numero" name="numero" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="23" required aria-describedby="e-numero">
+          <p class="error-campo" id="e-numero"></p>
+        </div>
+        <div class="fila">
+          <div class="campo">
+            <label for="vencimiento">Vence</label>
+            <input id="vencimiento" name="vencimiento" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" required aria-describedby="e-vencimiento">
+            <p class="error-campo" id="e-vencimiento"></p>
+          </div>
+          <div class="campo">
+            <label for="cvv">CVV</label>
+            <input id="cvv" name="cvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required aria-describedby="e-cvv">
+            <p class="error-campo" id="e-cvv"></p>
+          </div>
+        </div>
+        <!-- junto al botón: en el teléfono es donde está la vista al pagar -->
+        <p class="aviso aviso--error" role="alert" id="aviso-3"></p>
+        <div class="acciones">
+          <button class="boton boton--secundario" type="button" data-volver="2">Atrás</button>
+          <button class="boton" type="submit" id="btn-pagar">Pagar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Paso 4: listo -->
+    <section class="paso" id="paso-4" aria-labelledby="t-paso-4" hidden>
+      <h2 id="t-paso-4" tabindex="-1">Pago aprobado</h2>
+      <p class="ayuda" id="gracias"></p>
+      <div class="voucher" aria-label="Tu código de acceso">
+        <div class="voucher__franja"><span id="v-plan"></span><span id="v-duracion"></span></div>
+        <p class="voucher__codigo" id="v-codigo"></p>
+        <p class="voucher__nota">Guarda este código: si te desconectas, puedes volver a usarlo mientras tenga tiempo.</p>
+      </div>
+      <p class="aviso aviso--info" role="status" id="estado-conexion"></p>
+      <div class="acciones" id="acciones-final"></div>
+    </section>
+
+    <p class="pie">
+      Prototipo académico del curso de Telecomunicaciones, Universidad Mariano Gálvez.
+      ¿Problemas para navegar? <a href="diagnostico.html" id="link-diagnostico">Revisa tu conexión</a>.
+    </p>
+  </main>
+
+  <!-- PFSENSE_FORM -->
+  <script src="js/app.js"></script>
+</body>
+</html>

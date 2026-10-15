@@ -1,0 +1,52 @@
+# Réplica del portal. La imagen oficial de nginx sustituye las variables ${...}
+# al arrancar (archivos en /etc/nginx/templates).
+
+# ¿La petición va dirigida a nosotros? Un cliente IPv6 sin autenticar llega por el
+# port forward de pfSense con el Host del sitio que intentaba abrir (google.com, la
+# sonda de portal cautivo del teléfono...). A esos se les muestra el aviso IPv6.
+map $host $host_propio {
+    default 0;
+    ~^(localhost|127\.0\.0\.1|10\.10\.30\.\d+|\[.*\]|(.+\.)?prepago\.lan)$ 1;
+}
+
+server {
+    listen ${PORT};
+    listen [::]:${PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Redirecciones relativas: el cliente IPv6 llegó por el puerto 80 vía port forward,
+    # así que no debe recibir el puerto interno (8081) en el Location.
+    absolute_redirect off;
+
+    # Permite ver en las herramientas del navegador qué réplica atendió (demo de HAProxy)
+    add_header X-Replica ${REPLICA} always;
+
+    # HAProxy y el port forward IPv6 llegan aquí; se confía en X-Forwarded-For de la red local
+    set_real_ip_from 10.10.0.0/16;
+    set_real_ip_from 127.0.0.1;
+    real_ip_header X-Forwarded-For;
+
+    location /api/ {
+        proxy_pass http://${API_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s; # mayor que la demora simulada de "banco sin respuesta"
+    }
+
+    # Recursos que la página de aviso necesita aunque el Host sea ajeno
+    location = /ipv6.html { try_files $uri =404; add_header X-Replica ${REPLICA} always; }
+    location /css/ { try_files $uri =404; }
+
+    location / {
+        if ($host_propio = 0) {
+            return 302 /ipv6.html;
+        }
+        try_files $uri $uri/ =404;
+        add_header X-Replica ${REPLICA} always;
+        add_header Cache-Control "no-cache" always;
+    }
+}

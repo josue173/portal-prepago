@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Prepago UMG · Activa tu conexión</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<!--
+  Página de aviso para clientes IPv6 sin autenticar. El port forward IPv6 de pfSense
+  envía aquí su tráfico HTTP. El enlace apunta a login.prepago.lan, un nombre con solo
+  registro A (IPv4) que no está en "Allowed IP addresses": pfSense lo intercepta y
+  muestra el portal cautivo real.
+-->
+<body>
+  <header class="red">
+    <div class="red__interior">
+      <span class="red__nombre">Prepago-UMG</span>
+      <span class="red__lugar">Internet de última milla</span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <h1>Activa tu conexión para navegar</h1>
+    <p class="ayuda">
+      Estás conectado al Wi-Fi Prepago-UMG, pero tu dispositivo aún no tiene tiempo de navegación.
+      Compra un plan o usa tu código y se activarán IPv4 e IPv6 al mismo tiempo.
+    </p>
+    <div class="acciones">
+      <a class="boton" href="http://login.prepago.lan/">Abrir el portal</a>
+    </div>
+    <p class="pie">Si el botón no abre el portal, apaga y vuelve a encender el Wi-Fi de tu dispositivo.</p>
+  </main>
+</body>
+</html>
